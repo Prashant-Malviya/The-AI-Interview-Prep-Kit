@@ -32,8 +32,8 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
   if (!res.ok) {
     const err = body?.error || {};
-    // An expired/invalid session should send the user back to login
-    // rather than showing a raw error on a protected page.
+
+    
     if (res.status === 401) {
       setToken(null);
       window.location.href = "/login";

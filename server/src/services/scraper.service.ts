@@ -13,11 +13,7 @@ export interface FetchedPage {
   html: string;
 }
 
-// Fetches raw HTML for one URL. Tries Browserbase first (handles JS-heavy
-// sites and reduces bot-blocking) when credentials are configured, and
-// falls back to a plain axios request otherwise. The fallback is also
-// what runs against the local fixture site used by the batch command,
-// since a cloud browser service cannot reach `localhost`.
+
 export async function fetchRawHtml(rawUrl: string): Promise<FetchedPage> {
   const check = checkUrlIsSafeToFetch(rawUrl);
   if (!check.ok || !check.url) {
@@ -46,7 +42,7 @@ async function fetchWithAxios(url: string): Promise<FetchedPage> {
         maxContentLength: MAX_CONTENT_LENGTH_BYTES,
         responseType: "text",
         headers: {
-          // A descriptive UA so we're identifiable and polite crawlers can rate-limit us.
+          
           "User-Agent": "InterviewPrepKitBot/1.0 (+https://example.com/bot)",
           Accept: "text/html,application/xhtml+xml",
         },
@@ -68,8 +64,8 @@ async function fetchWithAxios(url: string): Promise<FetchedPage> {
 }
 
 async function fetchWithBrowserbase(url: string): Promise<FetchedPage> {
-  // Lazy-imported so the app still runs fine when Browserbase isn't configured
-  // and playwright-core hasn't been needed yet.
+
+  
   const { Browserbase } = await import("@browserbasehq/sdk");
   const { chromium } = await import("playwright-core");
 
@@ -88,7 +84,7 @@ async function fetchWithBrowserbase(url: string): Promise<FetchedPage> {
   }
 }
 
-// Strips scripts/styles/nav noise and returns readable text plus the title.
+
 export function extractCleanText(html: string, url: string): CrawledPage {
   const $ = cheerio.load(html);
   $("script, style, noscript, svg, iframe").remove();
@@ -103,10 +99,7 @@ export function extractCleanText(html: string, url: string): CrawledPage {
   return { url, title, text };
 }
 
-// Pulls same-origin (or explicitly followed) links out of a page, which
-// the research service then ranks and decides whether to follow. We
-// deliberately return relative links resolved against `baseUrl` so the
-// crawler works against any host, including the local fixture server.
+
 export function extractLinks(html: string, baseUrl: string): string[] {
   const $ = cheerio.load(html);
   const base = new URL(baseUrl);
@@ -117,13 +110,12 @@ export function extractLinks(html: string, baseUrl: string): string[] {
     if (!href || href.startsWith("mailto:") || href.startsWith("tel:") || href.startsWith("#")) return;
     try {
       const resolved = new URL(href, base);
-      // Stay on the same host - we're mapping one company's site, not the whole web.
+      
       if (resolved.hostname === base.hostname) {
         resolved.hash = "";
         links.add(resolved.toString());
       }
     } catch {
-      // ignore malformed hrefs
     }
   });
 

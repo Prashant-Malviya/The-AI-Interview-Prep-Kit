@@ -1,6 +1,3 @@
-// Mirrors server/src/types/kit.types.ts. Kept as a separate copy (not a
-// shared package) to keep this a simple two-folder project as requested -
-// see README for that trade-off.
 
 export type RequirementKind = "technical" | "behavioural" | "domain";
 export type Priority = "must" | "nice";

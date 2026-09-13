@@ -1,8 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-// Simple, beginner-friendly config object. We read everything once here
-// so the rest of the app never touches `process.env` directly.
+
 export const env = {
   port: Number(process.env.PORT || 4000),
   nodeEnv: process.env.NODE_ENV || "development",

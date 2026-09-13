@@ -22,8 +22,7 @@ export default function DashboardPage() {
   useEffect(() => {
     load();
     pollRef.current = setInterval(() => {
-      // Keep polling as long as anything is still generating, so the
-      // dashboard's status pills update without a manual refresh.
+      //polling
       load();
     }, 4000);
     return () => {

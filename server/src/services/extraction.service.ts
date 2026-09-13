@@ -2,9 +2,7 @@ import { askLLMForJson } from "./llm.service";
 import { makeIdGenerator } from "../utils/idGen";
 import { Requirement, RoleSection } from "../types/kit.types";
 
-// Raw shape we ask the model for. Note there's no "id" field here - ids
-// are assigned by our own code afterwards (see assignRequirementIds),
-// never by the model, so they're guaranteed stable and collision-free.
+
 interface RawRequirement {
   text: string;
   kind: "technical" | "behavioural" | "domain";
@@ -47,10 +45,7 @@ export async function extractRoleAndRequirements(jd: string): Promise<RoleSectio
   };
 }
 
-// Assigning ids is deterministic bookkeeping, not something we ask the
-// model to decide - this is what keeps requirement ids stable and lets
-// coverage checking be an objective, checkable fact rather than the
-// model's opinion of itself.
+
 function assignRequirementIds(raw: RawRequirement[]): Requirement[] {
   const nextId = makeIdGenerator("r");
   return raw

@@ -4,12 +4,7 @@ import { batchEntrySchema } from "../services/validation.service";
 import { runKitPipeline } from "../services/kitPipeline.service";
 import { BatchCase, BatchKitResult, BatchOutput } from "../types/kit.types";
 
-// Usage: npm run evaluate -- --input <cases.json> --output <kits.json>
-//
-// Deliberately standalone: no DB connection, no HTTP server. It calls
-// exactly the same runKitPipeline() function the API uses (see
-// kitPipeline.service.ts), so there is no parallel implementation to
-// keep in sync.
+
 
 function parseArgs(argv: string[]): { input: string; output: string } {
   const args: Record<string, string> = {};
@@ -24,10 +19,6 @@ function parseArgs(argv: string[]): { input: string; output: string } {
   return { input: args.input, output: args.output };
 }
 
-// Process a small, fixed number of cases at a time rather than all at
-// once, so we don't slam a free-tier LLM/scraping provider with a burst
-// of concurrent requests (their per-minute token limits are the whole
-// reason we need this).
 const CONCURRENCY = 2;
 
 async function processCase(c: BatchCase): Promise<BatchKitResult> {

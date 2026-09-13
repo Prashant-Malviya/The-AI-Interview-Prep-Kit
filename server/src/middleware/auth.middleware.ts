@@ -6,10 +6,7 @@ export interface AuthedRequest extends Request {
   userId?: string;
 }
 
-// Reads the "Authorization: Bearer <token>" header, verifies it, and
-// attaches the user id to the request. Anything wrong with the token
-// (missing, malformed, expired) results in a clean 401 rather than a
-// crash - a signed-out visitor must never reach a protected route.
+//authorization
 export function requireAuth(req: AuthedRequest, res: Response, next: NextFunction) {
   const header = req.headers.authorization;
   if (!header || !header.startsWith("Bearer ")) {

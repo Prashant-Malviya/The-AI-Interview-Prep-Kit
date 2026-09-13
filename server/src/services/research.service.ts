@@ -3,10 +3,7 @@ import { CrawledPage, HiringSignal } from "../types/kit.types";
 import { askLLM } from "./llm.service";
 import { loadDisallowedPaths, isPathAllowed } from "../utils/robots";
 
-// Keywords that make a link worth following. We rank rather than hard-code
-// a fixed path list, because (per the brief) hiring pages live at wildly
-// different paths per company - /careers, /jobs, a handbook, an engineering
-// blog post, etc.
+
 const HIRING_KEYWORDS = [
   "career", "careers", "jobs", "job", "hiring", "join", "join-us",
   "work-with-us", "interview", "interviewing", "recruit", "recruiting",
@@ -39,10 +36,7 @@ export interface CrawlResult {
   skipped: { url: string; reason: string }[];
 }
 
-// Crawl the site: fetch the homepage, rank its links, fetch the
-// most promising ones, and separate "about the company" pages from
-// "how they hire" pages. Any page that fails to fetch is skipped and
-// reported rather than aborting the whole run.
+
 export async function crawlCompanySite(companyUrl: string): Promise<CrawlResult> {
   const pagesUsed: CrawledPage[] = [];
   const hiringPages: CrawledPage[] = [];
@@ -90,9 +84,7 @@ export async function crawlCompanySite(companyUrl: string): Promise<CrawlResult>
   return { pagesUsed, hiringPages, skipped };
 }
 
-// Once we have candidate "hiring" pages, ask the model to summarise what,
-// if anything, they reveal about the interview process. If no hiring
-// pages were found at all, we report that honestly instead of guessing.
+
 export async function summariseHiringSignal(hiringPages: CrawledPage[]): Promise<HiringSignal> {
   if (hiringPages.length === 0) {
     return { found: false, summary: "No public information about the interview process was found on the company site.", pages_used: [] };

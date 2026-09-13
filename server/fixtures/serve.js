@@ -1,6 +1,3 @@
-// A deliberately tiny static file server (no Express) so it has zero
-// dependency on the app's build. Serves ./acme-site at
-// http://localhost:8099/acme/, which fixtures/cases.json points at.
 const http = require("http");
 const fs = require("fs");
 const path = require("path");

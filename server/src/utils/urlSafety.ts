@@ -1,9 +1,6 @@
 import { env } from "../config/env";
 
-// Private/loopback ranges we refuse to fetch in production. In development
-// we allow localhost so the batch command can hit the local fixture site
-// used for testing (see Appendix B: "company sites ... may be served from
-// a local address").
+
 const PRIVATE_HOST_PATTERNS = [
   /^localhost$/i,
   /^127\./,
@@ -22,9 +19,7 @@ export interface UrlCheckResult {
   url?: URL;
 }
 
-// Validates that a URL is well-formed, http(s), and (in production) not
-// pointing at a private/loopback address. Called before every outbound
-// fetch so we never let the app be used as an open proxy.
+
 export function checkUrlIsSafeToFetch(rawUrl: string): UrlCheckResult {
   let parsed: URL;
   try {

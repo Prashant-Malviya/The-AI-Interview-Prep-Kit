@@ -12,8 +12,7 @@ export function createApp() {
   app.use(cors({ origin: env.clientOrigin, credentials: true }));
   app.use(express.json({ limit: "1mb" }));
 
-  // Basic protection against a flood of generation requests hitting the
-  // (rate-limited) LLM provider all at once.
+
   const apiLimiter = rateLimit({ windowMs: 60_000, limit: 60 });
   app.use("/api", apiLimiter);
 

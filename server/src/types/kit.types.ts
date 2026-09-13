@@ -1,5 +1,3 @@
-// These types mirror Appendix A of the assessment brief field-for-field.
-// Field names must match exactly, so treat this file as the source of truth.
 
 export type RequirementKind = "technical" | "behavioural" | "domain";
 export type Priority = "must" | "nice";
@@ -79,19 +77,19 @@ export interface Kit {
   coverage: Coverage;
 }
 
-// --- Research/retrieval side types (not part of the saved kit shape) ---
+
 
 export interface HiringSignal {
-  // What we learned about the company's interview process, if anything.
+
   found: boolean;
-  summary: string; // e.g. "Take-home project followed by a system design round"
+  summary: string;
   pages_used: string[];
 }
 
 export interface CrawledPage {
   url: string;
   title: string;
-  text: string; // cleaned text content
+  text: string;
 }
 
 export interface RetrievalResult {
@@ -102,7 +100,6 @@ export interface RetrievalResult {
   skippedSources: { url: string; reason: string }[];
 }
 
-// --- Batch entry point types (Appendix B) ---
 
 export interface BatchCase {
   id: string;

@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 
-// We don't stream live step names from the server (that would need a
-// websocket or SSE channel) - instead we poll status and show a staged,
-// time-based progress indicator. It's an honest simplification: real
-// progress, not a fake fixed-duration bar, but not per-step detail either.
-// See README for this trade-off.
+
 const STAGES = [
   "Extracting requirements from the job description",
   "Crawling the company site",

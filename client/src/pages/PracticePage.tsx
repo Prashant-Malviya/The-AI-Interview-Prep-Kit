@@ -9,9 +9,8 @@ function orderByLeastConfident(
   cardIds: string[],
   progress: Record<string, { confidence: number; lastReviewedAt: string }>
 ): string[] {
-  // Never-reviewed cards come first (treated as confidence 0), then
-  // reviewed cards ascending by confidence - "order the next session by
-  // what they were least confident about".
+
+  
   return [...cardIds].sort((a, b) => {
     const confA = progress[a]?.confidence ?? 0;
     const confB = progress[b]?.confidence ?? 0;

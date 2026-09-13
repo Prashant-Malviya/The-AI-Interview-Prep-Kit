@@ -16,13 +16,10 @@ export interface PipelineInput {
   days: number;
 }
 
-// Reports progress as the pipeline runs so the frontend can show real
-// step-by-step status instead of a single opaque spinner.
+//step-by-step-report-porgress
 export type ProgressCallback = (step: string) => void;
 
-// This function is the single "same code" path used by both the
-// interactive API and the batch `npm run evaluate` command - see
-// Section 9 of the brief.
+
 export async function runKitPipeline(input: PipelineInput, onProgress: ProgressCallback = () => {}): Promise<Kit> {
   const { jd, companyUrl, days } = input;
 
@@ -35,9 +32,7 @@ export async function runKitPipeline(input: PipelineInput, onProgress: ProgressC
   const crawl = await crawlCompanySite(companyUrl);
   const companyName = deriveCompanyName(companyUrl, crawl.pagesUsed[0]?.title);
 
-  // Step 3: once we've found hiring pages, summarise what they actually say -
-  // this can change what questions make sense (e.g. a take-home + system
-  // design round vs. a company that publishes nothing).
+  // Step 3: once we've found hiring pages, summarise what they actually say
   onProgress("Looking for how this company runs interviews");
   const hiringSignal = await summariseHiringSignal(crawl.hiringPages);
 
@@ -46,15 +41,11 @@ export async function runKitPipeline(input: PipelineInput, onProgress: ProgressC
 
   onProgress("Writing the company brief");
   const companyBrief = await generateCompanyBrief(companyName, crawl.pagesUsed);
-  // Fold in anything concrete we learned from public discussion, without
-  // fabricating anything the pages/search didn't actually say.
   if (discussion.sources.length > 0) {
     companyBrief.sources = Array.from(new Set([...companyBrief.sources, ...discussion.sources]));
   }
 
-  // Step 4: generate questions per requirement KIND in separate calls -
-  // a "5+ years React" requirement and a "mentors junior engineers"
-  // requirement should not come from the same call with the same instructions.
+  // Step 4: generate questions per requirement KIND in separate calls 
   onProgress("Generating technical questions");
   const technicalReqs = role.requirements.filter((r) => categoryForKind(r.kind) === "technical");
   const behaviouralReqs = role.requirements.filter((r) => categoryForKind(r.kind) === "behavioural");
@@ -66,10 +57,7 @@ export async function runKitPipeline(input: PipelineInput, onProgress: ProgressC
     ...(await generateQuestionsForCategory(companyFitReqs, "company-fit", hiringSignal.summary)),
   ];
 
-  // If the hiring signal mentions a system-design round, add a small
-  // targeted set for senior-looking technical requirements - this is the
-  // concrete example from the brief of a hiring-process finding changing
-  // what questions make sense.
+
   if (/system.?design/i.test(hiringSignal.summary) && technicalReqs.length > 0) {
     onProgress("Adding system-design questions (their process includes one)");
     questions = questions.concat(await generateQuestionsForCategory(technicalReqs, "system-design", hiringSignal.summary));
@@ -78,9 +66,7 @@ export async function runKitPipeline(input: PipelineInput, onProgress: ProgressC
   onProgress("Building flashcards");
   const flashcards = await generateFlashcards(role.requirements);
 
-  // Step 5: the second pass - a deterministic, code-driven loop, not a
-  // model decision. Keep closing gaps until either nothing is uncovered
-  // or we hit the pass limit (see README for why 3 passes).
+  // Step 5: the second pass 
   onProgress("Checking coverage of must-have requirements");
   let passes = 1;
   let uncovered = findUncoveredMustHaveIds(role.requirements, questions);
@@ -144,7 +130,7 @@ function deriveCompanyName(companyUrl: string, homepageTitle?: string): string {
     const base = host.split(".")[0];
     const fallback = base.charAt(0).toUpperCase() + base.slice(1);
     if (homepageTitle && homepageTitle.length < 60) {
-      // Titles are often "Acme - Home" or "Acme | Careers"; take the first segment.
+      
       const first = homepageTitle.split(/[-|:]/)[0].trim();
       if (first.length > 1) return first;
     }

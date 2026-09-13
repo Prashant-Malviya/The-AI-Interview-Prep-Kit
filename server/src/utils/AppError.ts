@@ -1,6 +1,4 @@
-// A single error type with a machine-readable code (used in HTTP responses
-// and in the batch output's error.code field from Appendix B) and a
-// human-readable message.
+
 export class AppError extends Error {
   code: string;
   statusCode: number;

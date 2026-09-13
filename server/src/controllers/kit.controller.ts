@@ -15,10 +15,7 @@ function dedupeKeyFor(jd: string, companyUrl: string, days: number): string {
   return hashString(`${jd.trim()}::${companyUrl.trim().toLowerCase()}::${days}`);
 }
 
-// Kicks off generation in the background so the HTTP request returns
-// immediately and the frontend can poll for progress/status - generation
-// can easily take 60-90 seconds, and we never want that to hold a
-// connection open or block other requests.
+//generation in background
 async function processGeneration(kitId: string): Promise<void> {
   const doc = await KitModel.findById(kitId);
   if (!doc) return;
@@ -29,8 +26,7 @@ async function processGeneration(kitId: string): Promise<void> {
 
     const kit = await runKitPipeline(
       { jd: doc.inputJd, companyUrl: doc.inputCompanyUrl, days: doc.inputDays },
-      // In a beginner-scale single-process app, logging progress server-side
-      // is sufficient; the frontend polls status (pending/generating/ready/failed).
+      
       (step) => console.log(`[kit ${kitId}] ${step}`)
     );
 
@@ -53,8 +49,6 @@ export async function createKit(req: AuthedRequest, res: Response, next: NextFun
     const dedupeKey = dedupeKeyFor(jd, companyUrl, days);
     const existing = await KitModel.findOne({ owner: req.userId, dedupeKey });
     if (existing) {
-      // Same description + company submitted twice: return the existing
-      // kit instead of paying for generation again.
       return res.status(200).json({ kit: existing, reused: true });
     }
 
@@ -75,10 +69,7 @@ export async function createKit(req: AuthedRequest, res: Response, next: NextFun
   }
 }
 
-// Bulk creation - "prepare for more than one role at once by uploading a
-// file of description-and-company pairs". The frontend parses the
-// uploaded file into an array and posts it here; each entry gets the
-// same treatment (and dedupe check) as a single kit.
+// Bulk creation
 export async function createKitsBulk(req: AuthedRequest, res: Response, next: NextFunction) {
   try {
     const items = req.body.items;
@@ -141,9 +132,7 @@ export async function getKit(req: AuthedRequest, res: Response, next: NextFuncti
   }
 }
 
-// Saves the user's edited draft: the full kit JSON plus which question/
-// flashcard ids are "pinned" (hand-written or hand-edited). Pinned items
-// are the ones that must survive a later regeneration of their section.
+// Saves the user's edited draft
 export async function updateKit(req: AuthedRequest, res: Response, next: NextFunction) {
   try {
     const doc = await findOwnedKitOr404(req.params.id, req.userId!);
@@ -157,7 +146,7 @@ export async function updateKit(req: AuthedRequest, res: Response, next: NextFun
       pinnedFlashcardIds?: string[];
     };
 
-    validateKitOrThrow(kit); // never persist a shape that has drifted from Appendix A
+    validateKitOrThrow(kit); 
 
     doc.kit = kit;
     if (pinnedQuestionIds) doc.pinnedQuestionIds = pinnedQuestionIds;
@@ -172,10 +161,7 @@ export async function updateKit(req: AuthedRequest, res: Response, next: NextFun
 
 type RegenerateSection = "company_brief" | QuestionCategory | "schedule";
 
-// Regenerates exactly one section without discarding edits made
-// elsewhere, and without discarding pinned (hand-written/hand-edited)
-// items within the section itself. See README: "How generated, edited
-// and pinned state is represented".
+// Regenerates only a section
 export async function regenerateSection(req: AuthedRequest, res: Response, next: NextFunction) {
   try {
     const doc = await findOwnedKitOr404(req.params.id, req.userId!);
@@ -191,7 +177,7 @@ export async function regenerateSection(req: AuthedRequest, res: Response, next:
     } else if (section === "schedule") {
       kit.schedule = buildSchedule(kit.questions, kit.role.requirements, kit.schedule.days_available);
     } else {
-      // section is a question category: technical | behavioural | system-design | company-fit
+
       const category = section as QuestionCategory;
       const pinnedIds = new Set(doc.pinnedQuestionIds);
 
@@ -204,8 +190,7 @@ export async function regenerateSection(req: AuthedRequest, res: Response, next:
 
       kit.questions = [...keptQuestions, ...freshQuestions];
 
-      // Drop now-dangling schedule references without rebuilding the
-      // whole schedule, so the user's day layout/edits are preserved.
+
       const validQuestionIds = new Set(kit.questions.map((q) => q.id));
       for (const day of kit.schedule.days) {
         day.question_ids = day.question_ids.filter((id) => validQuestionIds.has(id));
@@ -224,7 +209,7 @@ export async function regenerateSection(req: AuthedRequest, res: Response, next:
   }
 }
 
-// Records how confident the user felt about a flashcard during practice.
+
 export async function recordPractice(req: AuthedRequest, res: Response, next: NextFunction) {
   try {
     const doc = await findOwnedKitOr404(req.params.id, req.userId!);

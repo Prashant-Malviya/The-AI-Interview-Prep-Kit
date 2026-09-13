@@ -2,12 +2,7 @@ import axios from "axios";
 import * as cheerio from "cheerio";
 import { askLLM } from "./llm.service";
 
-// We don't have a paid search API key (the brief explicitly won't supply
-// one), so we use DuckDuckGo's keyless HTML search endpoint to look for
-// public discussion of the company's interview process - Glassdoor/Blind/
-// Reddit threads, blog write-ups, etc. If this turns up nothing (blocked,
-// no results, or the company is obscure), we say so honestly rather than
-// inventing "what people say" about the interview.
+
 export interface DiscussionResult {
   summary: string;
   sources: string[];
