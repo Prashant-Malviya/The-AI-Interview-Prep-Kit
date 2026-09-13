@@ -5,7 +5,7 @@ dotenv.config();
 export const env = {
   port: Number(process.env.PORT || 4000),
   nodeEnv: process.env.NODE_ENV || "development",
-  clientOrigin: process.env.CLIENT_ORIGIN || "http://localhost:3000",
+  clientOrigin: process.env.CLIENT_ORIGIN || "https://the-ai-interview-prep-kit-weld.vercel.app",
 
   jwtSecret: process.env.JWT_SECRET || "dev-secret-change-me",
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || "7d",
