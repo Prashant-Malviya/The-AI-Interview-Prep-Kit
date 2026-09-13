@@ -1,0 +1,20 @@
+[
+  {
+    "id": "case-01",
+    "jd": "Senior Backend Engineer\n\nWe are looking for a Senior Backend Engineer to join our fleet coordination team.\n\nRequirements:\n- 5+ years of experience with Node.js or a similar backend runtime\n- Strong experience designing REST APIs and relational or document databases\n- Experience mentoring junior engineers and giving constructive code review\n- Comfortable working in a small, autonomous team with minimal oversight\n\nNice to have:\n- Experience with robotics, simulation, or real-time systems\n- Familiarity with Kubernetes",
+    "company_url": "http://localhost:8099/acme/",
+    "days": 5
+  },
+  {
+    "id": "case-02",
+    "jd": "Frontend Engineer. Build dashboards. React required.",
+    "company_url": "http://localhost:8099/acme/",
+    "days": 3
+  },
+  {
+    "id": "case-03",
+    "jd": "Backend Engineer needed. Node.js, MongoDB, 3+ years experience.",
+    "company_url": "http://this-domain-should-not-resolve-xyz123.example",
+    "days": 4
+  }
+]
