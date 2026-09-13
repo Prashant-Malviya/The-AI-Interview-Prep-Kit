@@ -239,3 +239,5 @@ A section-by-section check against the brief, for defense prep:
 - **A Gemini Pro (consumer) subscription does not grant Gemini API access.** They're separate Google products - the API key needs to come from [aistudio.google.com/apikey](https://aistudio.google.com/apikey), which has its own free tier independent of any consumer subscription.
 - **Gemini's free tier has a requests-per-minute cap** (tighter on `gemini-3.6-flash` than on paid tiers) - this is the concrete reason `askLLM`'s retry/backoff exists, and the bulk-upload / batch-command flows are the most likely places to hit it in a real demo, since they can fire several generations close together.
 - **`askLLMForJson`'s one-shot repair pass** (re-showing the model its own broken output and asking for corrected JSON) exists because even models with native JSON mode occasionally truncate or produce a structurally invalid object; if you see `LLM returned invalid JSON twice in a row`, it's worth lowering `temperature` further before assuming something else is wrong.
+#   T h e - A I - I n t e r v i e w - P r e p - K i t  
+ 
