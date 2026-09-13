@@ -25,9 +25,6 @@ export const batchEntrySchema = z.array(
   })
 );
 
-// --- Kit structure validation (Appendix A) ---
-// This is what "validate a generated kit against the expected structure
-// before saving it" (Backend Requirements) actually runs against.
 
 const requirementSchema = z.object({
   id: z.string(),
