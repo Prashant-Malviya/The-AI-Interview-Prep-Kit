@@ -33,7 +33,9 @@ export default function PracticePage() {
         setRecord(res.kit);
         if (res.kit.kit) {
           const ids = res.kit.kit.flashcards.map((c) => c.id);
-          setQueue(orderByLeastConfident(ids, res.kit.practiceProgress));
+         
+          setQueue(orderByLeastConfident(ids, res.kit.practiceProgress || {}));
+          
         }
       })
       .catch((err) => setError(err instanceof ApiError ? err.message : "Could not load this kit"));
@@ -42,7 +44,8 @@ export default function PracticePage() {
   const flashcards = record?.kit?.flashcards || [];
   const currentId = queue[position];
   const currentCard = useMemo(() => flashcards.find((c) => c.id === currentId), [flashcards, currentId]);
-  const reviewedCount = record ? Object.keys(record.practiceProgress).length : 0;
+  
+  const reviewedCount = record ? Object.keys(record.practiceProgress || {}).length : 0;
 
   async function handleRate(confidence: number) {
     if (!record || !currentId || !id) return;
